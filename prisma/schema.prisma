@@ -1,0 +1,85 @@
+// NOTE: resources are served by another microservice. Do not implement here.
+// schema.prisma
+// Modelagem baseada no diagrama enviado (rooms, furnitures, resources)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =========================================================
+// ENUMS
+// =========================================================
+
+enum RoomStatus {
+  ACTIVE
+  INACTIVE
+  MAINTENANCE
+}
+
+enum FurnitureStatus {
+  AVAILABLE
+  UNAVAILABLE
+  DAMAGED
+  MAINTENANCE
+}
+
+// =========================================================
+// MODELS
+// =========================================================
+
+model Room {
+  id          String       @id @default(uuid()) @map("_id")
+  capacity    Int
+  number      String       @db.VarChar(20)
+  building    String       @db.VarChar(10)
+  category    String       @db.VarChar(10)
+  floor       Int
+  description String?      @db.VarChar(255)
+  status      RoomStatus   @default(ACTIVE) @db.VarChar(20)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // RELACIONAMENTOS
+  furnitures  Furniture[]
+  resources   Resource[]
+
+  @@unique([number, building], name: "unique_number_building")
+  @@map("rooms")
+}
+
+// ---------------------------------------------------------
+
+model Furniture {
+  id            String          @id @default(uuid()) @map("_id")
+  name          String          @db.VarChar(100)
+  type          String          @db.VarChar(30)
+  description   String?         @db.VarChar(255)
+  status        FurnitureStatus @default(AVAILABLE) @db.VarChar(20)
+  property_code String          @db.VarChar(40)
+  roomId        String          @map("_id_room")
+
+  // RELACIONAMENTO
+  room          Room            @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@unique([name], name: "unique_furniture_name")
+  @@map("furnitures")
+}
+
+// ---------------------------------------------------------
+
+model Resource {
+  id          String   @id @default(uuid()) @map("_id")
+  roomId      String   @map("id_room")
+  resourceId  String   @map("id_resource")
+
+  // RELACIONAMENTO
+  room        Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@map("resources")
+}
+
