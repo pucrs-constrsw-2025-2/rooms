@@ -5,7 +5,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma, PrismaClientKnownRequestError } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { mapRoomToResponse } from './entities/room.entity';
 import { PrismaRoomRepository } from './prisma-room.repository';
@@ -121,12 +121,10 @@ export class RoomsService {
 
   private handlePrismaError(
     error: unknown,
-    action: string,
+    _action: string,
     id?: string,
   ): never {
-    void action;
-
-    if (error instanceof PrismaClientKnownRequestError) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === 'P2002') {
         throw new ConflictException('A room with the same number already exists in this building');
       }

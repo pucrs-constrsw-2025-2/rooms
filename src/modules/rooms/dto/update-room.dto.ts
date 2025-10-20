@@ -1,6 +1,6 @@
 // NOTE: resources are served by another microservice. Do not implement here.
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { PartialType } from '@nestjs/swagger';
+import { PartialType } from '@nestjs/mapped-types';
 import { RoomStatus } from '@prisma/client';
 import { IsEnum, IsInt, IsOptional, IsPositive, IsString, Length, MaxLength } from 'class-validator';
 import { CreateRoomDto } from './create-room.dto';
@@ -17,7 +17,7 @@ export class PatchRoomDto extends PartialType(CreateRoomDto) {
   @IsOptional()
   @IsString()
   @Length(1, 20)
-  override number?: string;
+  number?: string;
 
   @ApiPropertyOptional({
     description: 'Optional updated building identifier',
@@ -26,7 +26,7 @@ export class PatchRoomDto extends PartialType(CreateRoomDto) {
   @IsOptional()
   @IsString()
   @Length(1, 10)
-  override building?: string;
+  building?: string;
 
   @ApiPropertyOptional({
     description: 'Optional updated category',
@@ -35,7 +35,7 @@ export class PatchRoomDto extends PartialType(CreateRoomDto) {
   @IsOptional()
   @IsString()
   @Length(1, 10)
-  override category?: string;
+  category?: string;
 
   @ApiPropertyOptional({
     description: 'Optional updated capacity',
@@ -44,14 +44,14 @@ export class PatchRoomDto extends PartialType(CreateRoomDto) {
   @IsOptional()
   @IsInt()
   @IsPositive()
-  override capacity?: number;
+  capacity?: number;
 
   @ApiPropertyOptional({
     description: 'Optional updated floor',
   })
   @IsOptional()
   @IsInt()
-  override floor?: number;
+  floor?: number;
 
   @ApiPropertyOptional({
     description: 'Optional updated description',
@@ -60,7 +60,7 @@ export class PatchRoomDto extends PartialType(CreateRoomDto) {
   @IsOptional()
   @IsString()
   @MaxLength(255)
-  override description?: string;
+  description?: string;
 
   @ApiPropertyOptional({
     description: 'Optional updated status',
@@ -68,6 +68,5 @@ export class PatchRoomDto extends PartialType(CreateRoomDto) {
   })
   @IsOptional()
   @IsEnum(RoomStatus)
-  override status?: RoomStatus;
+  status?: RoomStatus;
 }
-
