@@ -2,7 +2,7 @@ import { RoomStatus } from '@prisma/client';
 import { CreateRoomDto } from './create-room.dto';
 export declare class UpdateRoomDto extends CreateRoomDto {
 }
-declare const PatchRoomDto_base: import("@nestjs/common").Type<Partial<CreateRoomDto>>;
+declare const PatchRoomDto_base: import("@nestjs/mapped-types").MappedType<Partial<CreateRoomDto>>;
 export declare class PatchRoomDto extends PatchRoomDto_base {
     number?: string;
     building?: string;

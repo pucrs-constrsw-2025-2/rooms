@@ -17,7 +17,8 @@ let PrismaService = class PrismaService extends client_1.PrismaClient {
         await this.$disconnect();
     }
     async enableShutdownHooks(app) {
-        this.$on('beforeExit', async () => {
+        const on = this.$on;
+        on?.call(this, 'beforeExit', async () => {
             await app.close();
         });
     }

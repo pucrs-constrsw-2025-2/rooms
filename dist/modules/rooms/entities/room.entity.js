@@ -8,7 +8,7 @@ const mapRoomToResponse = (room) => ({
     category: room.category,
     capacity: room.capacity,
     floor: room.floor,
-    description: room.description ?? undefined,
+    description: room.description,
     status: room.status,
     createdAt: room.createdAt,
     updatedAt: room.updatedAt,

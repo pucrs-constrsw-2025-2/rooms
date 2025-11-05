@@ -9,11 +9,11 @@ export declare class RoomsService {
     constructor(prisma: PrismaService, repository: PrismaRoomRepository);
     create(createRoomDto: CreateRoomDto): Promise<import("./entities/room.entity").RoomResponse>;
     findAll(query: QueryRoomDto): Promise<{
-        items: any;
+        items: import("./entities/room.entity").RoomResponse[];
         meta: {
             page: number;
             limit: number;
-            total: any;
+            total: number;
             totalPages: number;
         };
     }>;

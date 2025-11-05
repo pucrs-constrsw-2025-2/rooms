@@ -31,6 +31,13 @@
 $ npm install
 ```
 
+## Integração com OAuth
+
+Este serviço espera um endpoint de validação de tokens provido pelo microserviço `oauth`.
+Defina a variável de ambiente `OAUTH_VALIDATE_URL` apontando para o endpoint `/validate` do serviço OAuth (ex: `http://oauth:8000/validate`).
+No ambiente Docker Compose essa variável já é preenchida automaticamente a partir das variáveis de configuração do projeto.
+
+
 ## Compile and run the project
 
 ```bash

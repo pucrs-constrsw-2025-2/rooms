@@ -8,18 +8,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PatchRoomDto = exports.UpdateRoomDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
-const swagger_2 = require("@nestjs/swagger");
+const mapped_types_1 = require("@nestjs/mapped-types");
 const client_1 = require("@prisma/client");
 const class_validator_1 = require("class-validator");
 const create_room_dto_1 = require("./create-room.dto");
 class UpdateRoomDto extends create_room_dto_1.CreateRoomDto {
 }
 exports.UpdateRoomDto = UpdateRoomDto;
-class PatchRoomDto extends (0, swagger_2.PartialType)(create_room_dto_1.CreateRoomDto) {
+class PatchRoomDto extends (0, mapped_types_1.PartialType)(create_room_dto_1.CreateRoomDto) {
     number;
     building;
     category;
@@ -94,6 +93,6 @@ __decorate([
     }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsEnum)(client_1.RoomStatus),
-    __metadata("design:type", typeof (_a = typeof client_1.RoomStatus !== "undefined" && client_1.RoomStatus) === "function" ? _a : Object)
+    __metadata("design:type", String)
 ], PatchRoomDto.prototype, "status", void 0);
 //# sourceMappingURL=update-room.dto.js.map

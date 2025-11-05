@@ -18,6 +18,8 @@ RUN npm run build
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
+# ensure curl exists so the docker-compose healthcheck (uses curl) works
+RUN apk add --no-cache curl
 COPY package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist

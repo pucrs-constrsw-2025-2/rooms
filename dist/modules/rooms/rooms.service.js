@@ -114,9 +114,8 @@ let RoomsService = class RoomsService {
             this.handlePrismaError(error, 'delete', id);
         }
     }
-    handlePrismaError(error, action, id) {
-        void action;
-        if (error instanceof client_1.PrismaClientKnownRequestError) {
+    handlePrismaError(error, _action, id) {
+        if (error instanceof client_1.Prisma.PrismaClientKnownRequestError) {
             if (error.code === 'P2002') {
                 throw new common_1.ConflictException('A room with the same number already exists in this building');
             }
