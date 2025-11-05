@@ -15,7 +15,7 @@ import { JwtAuthGuard } from '../../../oauth/jwt-auth.guard';
 import { FurnituresService } from './furnitures.service';
 
 @ApiTags('rooms.furnitures')
-@ApiBearerAuth()
+@ApiBearerAuth('bearer')
 @UseGuards(JwtAuthGuard)
 @Controller('api/v1/rooms/:roomId/furnitures')
 export class FurnituresController {

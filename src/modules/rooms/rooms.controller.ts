@@ -24,7 +24,7 @@ import { QueryRoomDto } from './dto/query-room.dto';
 import { RoomsService } from './rooms.service';
 
 @ApiTags('rooms')
-@ApiBearerAuth()
+@ApiBearerAuth('bearer')
 @UseGuards(JwtAuthGuard)
 @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
 @Controller('api/v1/rooms')

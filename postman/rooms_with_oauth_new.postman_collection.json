@@ -1,0 +1,233 @@
+{
+  "info": {
+    "_postman_id": "rooms-oauth-collection-v2",
+    "name": "Rooms API - OAuth flow (with env defaults)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "oauth_base", "value": "http://localhost:8180" },
+    { "key": "rooms_base", "value": "http://localhost:8188" },
+    { "key": "access_token", "value": "" },
+    { "key": "room_id", "value": "" },
+    { "key": "furniture_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Auth - Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const jsonData = pm.response.json();",
+                  "if (jsonData.access_token) pm.environment.set('access_token', jsonData.access_token);",
+                  "if (jsonData.refresh_token) pm.environment.set('refresh_token', jsonData.refresh_token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "username", "value": "admin@pucrs.br", "type": "text" },
+                { "key": "password", "value": "a12345678", "type": "text" }
+              ]
+            },
+            "url": {
+              "raw": "{{oauth_base}}/login",
+              "host": ["{{oauth_base}}"],
+              "path": ["login"]
+            }
+          }
+        },
+        {
+          "name": "Auth - Validate",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{oauth_base}}/validate",
+              "host": ["{{oauth_base}}"],
+              "path": ["validate"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rooms",
+      "item": [
+        {
+          "name": "Rooms - List",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{rooms_base}}/api/v1/rooms",
+              "host": ["{{rooms_base}}"],
+              "path": ["api","v1","rooms"]
+            }
+          }
+        },
+        {
+          "name": "Rooms - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"capacity\": 30,\n  \"number\": \"101\",\n  \"building\": \"Main\",\n  \"category\": \"CLASSROOM\",\n  \"floor\": 1,\n  \"description\": \"Room for data engineering classes\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "{{rooms_base}}/api/v1/rooms",
+              "host": ["{{rooms_base}}"],
+              "path": ["api","v1","rooms"]
+            }
+          }
+        },
+        {
+          "name": "Rooms - Get by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{rooms_base}}/api/v1/rooms/{{room_id}}",
+              "host": ["{{rooms_base}}"],
+              "path": ["api","v1","rooms","{{room_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Rooms - Update (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"capacity\": 35,\n  \"number\": \"101\",\n  \"building\": \"Main\",\n  \"category\": \"CLASSROOM\",\n  \"floor\": 1,\n  \"description\": \"Updated room description\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "{{rooms_base}}/api/v1/rooms/{{room_id}}",
+              "host": ["{{rooms_base}}"],
+              "path": ["api","v1","rooms","{{room_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Rooms - Partial Update (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"capacity\": 40\n}"
+            },
+            "url": {
+              "raw": "{{rooms_base}}/api/v1/rooms/{{room_id}}",
+              "host": ["{{rooms_base}}"],
+              "path": ["api","v1","rooms","{{room_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Rooms - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{rooms_base}}/api/v1/rooms/{{room_id}}",
+              "host": ["{{rooms_base}}"],
+              "path": ["api","v1","rooms","{{room_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Furnitures",
+      "item": [
+        {
+          "name": "Furnitures - List",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{rooms_base}}/api/v1/rooms/{{room_id}}/furnitures",
+              "host": ["{{rooms_base}}"],
+              "path": ["api","v1","rooms","{{room_id}}","furnitures"]
+            }
+          }
+        },
+        {
+          "name": "Furnitures - Create",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Table\",\n  \"quantity\": 10\n}" },
+            "url": {
+              "raw": "{{rooms_base}}/api/v1/rooms/{{room_id}}/furnitures",
+              "host": ["{{rooms_base}}"],
+              "path": ["api","v1","rooms","{{room_id}}","furnitures"]
+            }
+          }
+        },
+        {
+          "name": "Furnitures - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{rooms_base}}/api/v1/rooms/{{room_id}}/furnitures/{{furniture_id}}",
+              "host": ["{{rooms_base}}"],
+              "path": ["api","v1","rooms","{{room_id}}","furnitures","{{furniture_id}}"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -10,6 +10,8 @@ RUN npm install
 
 FROM node:20-alpine AS builder
 WORKDIR /app
+# Install OpenSSL for Prisma
+RUN apk add --no-cache openssl
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run prisma:generate
@@ -19,7 +21,8 @@ FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 # ensure curl exists so the docker-compose healthcheck (uses curl) works
-RUN apk add --no-cache curl
+# Install OpenSSL for Prisma
+RUN apk add --no-cache curl openssl
 COPY package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
