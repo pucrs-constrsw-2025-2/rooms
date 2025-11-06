@@ -6,12 +6,13 @@ WORKDIR /app
 COPY package*.json ./
 COPY scripts ./scripts
 ENV SKIP_PRISMA_GENERATE=1
-RUN npm install
+# Use npm ci para builds reprodutíveis
+RUN npm ci
 
 FROM node:20-alpine AS builder
 WORKDIR /app
-# Install OpenSSL for Prisma
-RUN apk add --no-cache openssl
+# Install OpenSSL and glibc compat for Prisma on Alpine
+RUN apk add --no-cache openssl libc6-compat
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run prisma:generate
@@ -21,8 +22,8 @@ FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 # ensure curl exists so the docker-compose healthcheck (uses curl) works
-# Install OpenSSL for Prisma
-RUN apk add --no-cache curl openssl
+# Install OpenSSL and glibc compat for Prisma runtime
+RUN apk add --no-cache curl openssl libc6-compat
 COPY package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
