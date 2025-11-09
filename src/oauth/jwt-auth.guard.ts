@@ -32,8 +32,11 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException('Missing bearer token');
     }
 
-    const validationEndpoint =
-      process.env.OAUTH_VALIDATE_URL ?? JWT_VALIDATION_ENDPOINT_PLACEHOLDER;
+    // Build OAuth validation URL from environment variables
+    const oauthProtocol = process.env.OAUTH_INTERNAL_PROTOCOL ?? 'http';
+    const oauthHost = process.env.OAUTH_INTERNAL_HOST ?? 'oauth';
+    const oauthPort = process.env.OAUTH_INTERNAL_API_PORT ?? '8180';
+    const validationEndpoint = `${oauthProtocol}://${oauthHost}:${oauthPort}/validate`;
 
     try {
       // Call the OAuth microservice validate endpoint. The oauth service

@@ -41,8 +41,6 @@ async function bootstrap() {
   const host = '0.0.0.0';
 
   await app.listen(port, host);
-  console.log(`🚀 Rooms API is running on http://${host}:${port}`);
-  console.log(`📚 Swagger UI available at http://${host}:${port}/api/v1/docs`);
 }
 
 bootstrap();

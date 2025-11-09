@@ -27,5 +27,7 @@ COPY package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
+COPY scripts/set-database-url.sh ./scripts/
+RUN chmod +x ./scripts/set-database-url.sh
 EXPOSE 3000
-CMD ["npm", "run", "start:prod"]
+CMD ["./scripts/set-database-url.sh"]
