@@ -1,3 +1,4 @@
+import './instrumentation';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -39,6 +40,11 @@ async function bootstrap() {
   // Prefer the explicit internal port configured in docker-compose (ROOMS_INTERNAL_API_PORT)
   const port = process.env.PORT ?? process.env.ROOMS_INTERNAL_API_PORT ?? 3000;
   const host = '0.0.0.0';
+
+  // Global API prefix (excluindo /health)
+  app.setGlobalPrefix('api/v1', {
+    exclude: ['health'],
+  });
 
   await app.listen(port, host);
 }

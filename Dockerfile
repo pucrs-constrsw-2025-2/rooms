@@ -7,7 +7,8 @@ COPY package*.json ./
 COPY scripts ./scripts
 ENV SKIP_PRISMA_GENERATE=1
 # Use npm ci para builds reprodutíveis
-RUN npm ci
+RUN npm install --package-lock-only || true
+RUN npm ci --legacy-peer-deps || npm install --legacy-peer-deps
 
 FROM node:20-alpine AS builder
 WORKDIR /app
