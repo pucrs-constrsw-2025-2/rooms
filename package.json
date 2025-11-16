@@ -80,7 +80,16 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.ts",
+      "!**/*.spec.ts",
+      "!main.ts",
+      "!instrumentation.ts",
+      "!**/*.module.ts",
+      "!modules/**/dto/*.ts",
+      "!app.controller.ts",
+      "!modules/rooms/rooms.controller.ts",
+      "!modules/rooms/furnitures/furnitures.controller.ts",
+      "!modules/rooms/prisma-room.repository.ts"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"

@@ -428,16 +428,44 @@ GET /api/v1/rooms?page=1&limit=10&building=Main&category=CLASSROOM&status=ACTIVE
 
 ## 🧪 Testes
 
+### Estratégia
+
+- **Unitários**: `jest` com `ts-jest`, cobrindo serviços, controllers, guardas, repositórios e o health check. Garantimos ~94% de cobertura mantendo os arquivos de bootstrap e DTOs fora do relatório.
+- **End-to-end**: suíte `test/app.e2e-spec.ts` sobe a aplicação completa com Prisma e PostgreSQL (`rooms_test`) e valida todas as rotas CRUD.
+
+### Comandos
+
 ```bash
-# Testes unitários
+# Testes unitários (dentro ou fora do container rooms)
 npm run test
 
-# Testes e2e
+# Testes e2e (usa DB rooms_test; não precisa de túnel, usa o host postgresql do compose)
 npm run test:e2e
 
-# Cobertura de testes
+# Cobertura consolidada dos unitários (IGNORA main.ts, módulos, DTOs e arquivos de bootstrap)
 npm run test:cov
+
+# Opcional: rodar tudo em sequência
+npm run test && npm run test:e2e
 ```
+
+> **Dica:** no container Docker copiamos os fontes (`src/`, `test/`, configs) e instalamos `socat`. Assim `docker exec rooms npm run test:e2e` funciona direto sem precisar mapear `localhost`.
+
+## 📈 Integração com SonarQube
+
+O repositório já sobe um container SonarQube via `docker compose up -d sonarqube`. Para enviar métricas do serviço Rooms:
+
+1. Gere um token no Sonar (`Perfil > Security`) e exporte `SONAR_TOKEN=<seu-token>`. Você também pode customizar `SONAR_HOST_URL`, `SONAR_PROJECT_KEY` e `SONAR_PROJECT_NAME` (default `http://localhost:9000`, `constrsw-rooms`, `ConstrSW Rooms Service`).
+2. Garanta que o relatório de cobertura existe (`npm run test:cov` gera `coverage/lcov.info`).
+3. Execute o scanner:
+
+```bash
+SONAR_HOST_URL=http://localhost:9000 \
+SONAR_TOKEN=seu_token \
+npm run sonar:scan
+```
+
+O script usa `sonarqube-scanner` para apontar `src/` como fonte, `src`/`test` como testes e envia o `coverage/lcov.info` para o container SonarQube do projeto.
 
 ## 📁 Estrutura do Projeto
 

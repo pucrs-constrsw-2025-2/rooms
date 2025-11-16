@@ -4,7 +4,7 @@ const { promisify } = require('util');
 const execAsync = promisify(exec);
 
 async function setupTestDatabase() {
-  const testDatabaseUrl = 'postgresql://postgres:postgres@localhost:5432/rooms_test?schema=public';
+  const testDatabaseUrl = 'postgresql://postgres:postgres@postgresql:5432/rooms_test?schema=public';
   
   console.log('Setting up test database...');
   

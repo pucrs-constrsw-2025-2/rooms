@@ -23,13 +23,18 @@ FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 # ensure curl exists so the docker-compose healthcheck (uses curl) works
-# Install OpenSSL and glibc compat for Prisma runtime
-RUN apk add --no-cache curl openssl libc6-compat
+# Install OpenSSL, socat and glibc compat for Prisma runtime and test tooling
+RUN apk add --no-cache curl openssl libc6-compat socat
 COPY package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/src ./src
+COPY --from=builder /app/test ./test
 COPY --from=builder /app/prisma ./prisma
-COPY scripts/set-database-url.sh ./scripts/
+COPY --from=builder /app/nest-cli.json ./nest-cli.json
+COPY --from=builder /app/tsconfig*.json ./
+COPY --from=builder /app/types ./types
+COPY --from=builder /app/scripts ./scripts
 RUN chmod +x ./scripts/set-database-url.sh
 EXPOSE 3000
 CMD ["./scripts/set-database-url.sh"]

@@ -17,7 +17,7 @@ describe('RoomsController (e2e)', () => {
     // Set the DATABASE_URL for the test environment
     // This should point to your test database
     process.env.DATABASE_URL =
-      'postgresql://postgres:postgres@localhost:5432/rooms_test?schema=public';
+      'postgresql://postgres:postgres@postgresql:5432/rooms_test?schema=public';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
