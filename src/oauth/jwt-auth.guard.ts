@@ -6,7 +6,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { JWT_VALIDATION_ENDPOINT_PLACEHOLDER } from '../modules/rooms/rooms.constants';
 import axios from 'axios';
 
 @Injectable()
@@ -32,11 +31,10 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException('Missing bearer token');
     }
 
-    // Build OAuth validation URL from environment variables
-    const oauthProtocol = process.env.OAUTH_INTERNAL_PROTOCOL ?? 'http';
-    const oauthHost = process.env.OAUTH_INTERNAL_HOST ?? 'oauth';
-    const oauthPort = process.env.OAUTH_INTERNAL_API_PORT ?? '8180';
-    const validationEndpoint = `${oauthProtocol}://${oauthHost}:${oauthPort}/validate`;
+    // Prefer explicit OAUTH_VALIDATE_URL when provided; otherwise build from internal vars
+    const validationEndpoint =
+      process.env.OAUTH_VALIDATE_URL ??
+      `${process.env.OAUTH_INTERNAL_PROTOCOL ?? 'http'}://${process.env.OAUTH_INTERNAL_HOST ?? 'oauth'}:${process.env.OAUTH_INTERNAL_API_PORT ?? '8180'}/validate`;
 
     try {
       // Call the OAuth microservice validate endpoint. The oauth service

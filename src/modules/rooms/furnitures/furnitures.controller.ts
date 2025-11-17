@@ -10,13 +10,14 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiExcludeController, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../../oauth/jwt-auth.guard';
 import { FurnituresService } from './furnitures.service';
 
 @ApiTags('rooms.furnitures')
 @ApiBearerAuth('bearer')
 @UseGuards(JwtAuthGuard)
+@ApiExcludeController()
 @Controller('api/v1/rooms/:roomId/furnitures')
 export class FurnituresController {
   constructor(private readonly furnituresService: FurnituresService) {}

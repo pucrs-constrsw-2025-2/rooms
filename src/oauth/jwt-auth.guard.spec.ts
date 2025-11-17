@@ -68,6 +68,22 @@ describe('JwtAuthGuard', () => {
     expect(request.oauthValidationEndpoint).toBe('http://oauth:8180/validate');
   });
 
+  it('should honor OAUTH_VALIDATE_URL when provided', async () => {
+    const payload = { sub: 'custom-url' };
+    mockedAxios.post.mockResolvedValue({ data: payload } as any);
+    process.env.OAUTH_VALIDATE_URL = 'https://auth.example.com/validate';
+
+    const request: any = { headers: { authorization: 'Bearer token-custom' } };
+
+    await guard.canActivate(createContext(request));
+
+    expect(mockedAxios.post).toHaveBeenCalledWith(
+      'https://auth.example.com/validate',
+      null,
+      { headers: { Authorization: 'Bearer token-custom' } },
+    );
+  });
+
   it('should fallback to default OAuth endpoint when env vars are missing', async () => {
     delete process.env.OAUTH_INTERNAL_PROTOCOL;
     delete process.env.OAUTH_INTERNAL_HOST;
