@@ -34,7 +34,7 @@ export class JwtAuthGuard implements CanActivate {
     // Prefer explicit OAUTH_VALIDATE_URL when provided; otherwise build from internal vars
     const validationEndpoint =
       process.env.OAUTH_VALIDATE_URL ??
-      `${process.env.OAUTH_INTERNAL_PROTOCOL ?? 'http'}://${process.env.OAUTH_INTERNAL_HOST ?? 'oauth'}:${process.env.OAUTH_INTERNAL_API_PORT ?? '8180'}/validate`;
+      `${process.env.OAUTH_INTERNAL_PROTOCOL ?? 'http'}://${process.env.OAUTH_INTERNAL_HOST ?? 'oauth'}:${process.env.OAUTH_INTERNAL_API_PORT ?? '8000'}/api/v1/validate`;
 
     try {
       // Call the OAuth microservice validate endpoint. The oauth service

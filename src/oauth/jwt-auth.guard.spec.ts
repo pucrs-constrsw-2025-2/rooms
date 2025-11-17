@@ -60,12 +60,12 @@ describe('JwtAuthGuard', () => {
 
     expect(result).toBe(true);
     expect(mockedAxios.post).toHaveBeenCalledWith(
-      'http://oauth:8180/validate',
+      'http://oauth:8180/api/v1/validate',
       null,
       { headers: { Authorization: 'Bearer token-123' } },
     );
     expect(request.user).toEqual(payload);
-    expect(request.oauthValidationEndpoint).toBe('http://oauth:8180/validate');
+    expect(request.oauthValidationEndpoint).toBe('http://oauth:8180/api/v1/validate');
   });
 
   it('should honor OAUTH_VALIDATE_URL when provided', async () => {
@@ -94,7 +94,7 @@ describe('JwtAuthGuard', () => {
     await guard.canActivate(createContext(request));
 
     expect(mockedAxios.post).toHaveBeenCalledWith(
-      'http://oauth:8180/validate',
+      'http://oauth:8000/api/v1/validate',
       null,
       { headers: { Authorization: 'Bearer token-default' } },
     );

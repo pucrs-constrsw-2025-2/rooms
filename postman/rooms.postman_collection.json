@@ -1,0 +1,603 @@
+{
+	"info": {
+		"_postman_id": "rooms-api-2025",
+		"name": "Rooms API",
+		"description": "API REST para gerenciamento de salas (Rooms) - ConstrSW 2025-2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "rooms-api"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8188",
+			"type": "string"
+		},
+		{
+			"key": "oauth_url",
+			"value": "http://localhost:8180",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "room_id",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('access_token', jsonData.access_token);",
+									"    console.log('Token saved:', jsonData.access_token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "admin@pucrs.br",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "a12345678",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{oauth_url}}/api/v1/login",
+							"host": [
+								"{{oauth_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"login"
+							]
+						},
+						"description": "Autentica o usuário e obtém o access_token"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints de autenticação OAuth"
+		},
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "Root Health Check",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "Health check simples na raiz"
+					},
+					"response": []
+				},
+				{
+					"name": "Detailed Health Check",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Health check detalhado com status do PostgreSQL"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints de verificação de saúde do serviço"
+		},
+		{
+			"name": "Rooms",
+			"item": [
+				{
+					"name": "Create Room",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('room_id', jsonData.id);",
+									"    console.log('Room ID saved:', jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"number\": \"101A\",\n  \"building\": \"BLD1\",\n  \"category\": \"LAB\",\n  \"capacity\": 30,\n  \"floor\": 1,\n  \"description\": \"Laboratório de Informática\",\n  \"status\": \"ACTIVE\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/rooms",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rooms"
+							]
+						},
+						"description": "Cria uma nova sala"
+					},
+					"response": []
+				},
+				{
+					"name": "List All Rooms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/rooms",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rooms"
+							]
+						},
+						"description": "Lista todas as salas sem filtros"
+					},
+					"response": []
+				},
+				{
+					"name": "List Rooms with Filters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/rooms?page=1&limit=10&building=BLD1&category=LAB&status=ACTIVE&minCapacity=20&maxCapacity=50",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rooms"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Número da página (padrão: 1)"
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Limite de resultados por página (padrão: 10)"
+								},
+								{
+									"key": "building",
+									"value": "BLD1",
+									"description": "Filtrar por prédio"
+								},
+								{
+									"key": "category",
+									"value": "LAB",
+									"description": "Filtrar por categoria"
+								},
+								{
+									"key": "status",
+									"value": "ACTIVE",
+									"description": "Filtrar por status (ACTIVE, INACTIVE, MAINTENANCE)"
+								},
+								{
+									"key": "minCapacity",
+									"value": "20",
+									"description": "Capacidade mínima"
+								},
+								{
+									"key": "maxCapacity",
+									"value": "50",
+									"description": "Capacidade máxima"
+								},
+								{
+									"key": "number",
+									"value": "",
+									"description": "Filtrar por número da sala",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Lista salas com filtros e paginação"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Room by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/rooms/{{room_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rooms",
+								"{{room_id}}"
+							]
+						},
+						"description": "Busca uma sala específica pelo ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Room (PUT)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"number\": \"101A\",\n  \"building\": \"BLD1\",\n  \"category\": \"LAB\",\n  \"capacity\": 35,\n  \"floor\": 1,\n  \"description\": \"Laboratório de Informática Atualizado\",\n  \"status\": \"ACTIVE\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/rooms/{{room_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rooms",
+								"{{room_id}}"
+							]
+						},
+						"description": "Substitui completamente uma sala existente (todos os campos obrigatórios)"
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Room (PATCH)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"capacity\": 40,\n  \"description\": \"Laboratório de Informática - Capacidade Ampliada\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/rooms/{{room_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rooms",
+								"{{room_id}}"
+							]
+						},
+						"description": "Atualiza parcialmente uma sala (apenas campos fornecidos)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Room",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/rooms/{{room_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rooms",
+								"{{room_id}}"
+							]
+						},
+						"description": "Remove uma sala pelo ID"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints CRUD para gerenciamento de salas"
+		},
+		{
+			"name": "Furnitures (Scaffold)",
+			"item": [
+				{
+					"name": "Create Furniture",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Cadeira\",\n  \"quantity\": 30\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/rooms/{{room_id}}/furnitures",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rooms",
+								"{{room_id}}",
+								"furnitures"
+							]
+						},
+						"description": "Cria mobília para uma sala (scaffold - retorna 501 Not Implemented)"
+					},
+					"response": []
+				},
+				{
+					"name": "List Furnitures",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/rooms/{{room_id}}/furnitures",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rooms",
+								"{{room_id}}",
+								"furnitures"
+							]
+						},
+						"description": "Lista mobílias de uma sala (scaffold - retorna 501 Not Implemented)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Furniture by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/rooms/{{room_id}}/furnitures/:furnitureId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rooms",
+								"{{room_id}}",
+								"furnitures",
+								":furnitureId"
+							],
+							"variable": [
+								{
+									"key": "furnitureId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Busca mobília pelo ID (scaffold - retorna 501 Not Implemented)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Furniture (PUT)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Cadeira Atualizada\",\n  \"quantity\": 32\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/rooms/{{room_id}}/furnitures/:furnitureId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rooms",
+								"{{room_id}}",
+								"furnitures",
+								":furnitureId"
+							],
+							"variable": [
+								{
+									"key": "furnitureId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Substitui mobília (scaffold - retorna 501 Not Implemented)"
+					},
+					"response": []
+				},
+				{
+					"name": "Patch Furniture (PATCH)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"quantity\": 35\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/rooms/{{room_id}}/furnitures/:furnitureId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rooms",
+								"{{room_id}}",
+								"furnitures",
+								":furnitureId"
+							],
+							"variable": [
+								{
+									"key": "furnitureId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Atualiza parcialmente mobília (scaffold - retorna 501 Not Implemented)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Furniture",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/rooms/{{room_id}}/furnitures/:furnitureId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"rooms",
+								"{{room_id}}",
+								"furnitures",
+								":furnitureId"
+							],
+							"variable": [
+								{
+									"key": "furnitureId",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Remove mobília (scaffold - retorna 501 Not Implemented)"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints de mobílias (ainda não implementados - retornam 501 Not Implemented)"
+		}
+	]
+}
