@@ -4,9 +4,13 @@ const { promisify } = require('util');
 const execAsync = promisify(exec);
 
 async function setupTestDatabase() {
-  const testDatabaseUrl = 'postgresql://postgres:postgres@postgresql:5432/rooms_test?schema=public';
+  // Use DATABASE_URL from environment or fallback to default
+  // Defaults to localhost for CI/CD (GitHub Actions) and postgresql for Docker Compose
+  const testDatabaseUrl = process.env.DATABASE_URL || 
+    'postgresql://postgres:postgres@postgresql:5432/rooms_test?schema=public';
   
   console.log('Setting up test database...');
+  console.log(`Using DATABASE_URL: ${testDatabaseUrl.replace(/:[^:@]+@/, ':****@')}`); // Hide password in logs
   
   try {
     // Set the DATABASE_URL environment variable for this process

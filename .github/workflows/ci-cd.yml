@@ -60,10 +60,29 @@ jobs:
         run: |
           npm run test
 
+      - name: Aguardar PostgreSQL estar pronto
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/rooms_test?schema=public
+        run: |
+          echo "Aguardando PostgreSQL estar pronto..."
+          # Instalar cliente PostgreSQL para usar pg_isready
+          sudo apt-get update && sudo apt-get install -y postgresql-client
+          for i in {1..30}; do
+            if pg_isready -h localhost -p 5432 -U postgres 2>/dev/null; then
+              echo "✅ PostgreSQL está pronto!"
+              exit 0
+            fi
+            echo "Aguardando PostgreSQL... tentativa $i/30"
+            sleep 2
+          done
+          echo "❌ PostgreSQL não ficou pronto a tempo"
+          exit 1
+
       - name: Configurar banco de dados para testes E2E
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/rooms_test?schema=public
         run: |
+          echo "DATABASE_URL está configurado: ${DATABASE_URL}"
           npm run test:e2e:setup || true
 
       - name: Executar testes E2E

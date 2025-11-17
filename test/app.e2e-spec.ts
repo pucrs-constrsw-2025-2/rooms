@@ -15,9 +15,12 @@ describe('RoomsController (e2e)', () => {
 
   beforeAll(async () => {
     // Set the DATABASE_URL for the test environment
-    // This should point to your test database
-    process.env.DATABASE_URL =
-      'postgresql://postgres:postgres@postgresql:5432/rooms_test?schema=public';
+    // Use DATABASE_URL from environment or fallback to default
+    // Defaults to localhost for CI/CD (GitHub Actions) and postgresql for Docker Compose
+    if (!process.env.DATABASE_URL) {
+      process.env.DATABASE_URL =
+        'postgresql://postgres:postgres@postgresql:5432/rooms_test?schema=public';
+    }
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
