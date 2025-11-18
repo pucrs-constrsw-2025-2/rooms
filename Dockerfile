@@ -37,4 +37,5 @@ COPY --from=builder /app/types ./types
 COPY --from=builder /app/scripts ./scripts
 RUN chmod +x ./scripts/set-database-url.sh
 EXPOSE 3000
+EXPOSE 9229
 CMD ["./scripts/set-database-url.sh"]
