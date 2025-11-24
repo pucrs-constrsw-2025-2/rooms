@@ -27,7 +27,7 @@ import { RoomsService } from './rooms.service';
 @ApiBearerAuth('bearer')
 @UseGuards(JwtAuthGuard)
 @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
-@Controller('api/v1/rooms')
+@Controller('rooms')
 export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
 

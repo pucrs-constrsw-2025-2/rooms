@@ -18,7 +18,7 @@ import { FurnituresService } from './furnitures.service';
 @ApiBearerAuth('bearer')
 @UseGuards(JwtAuthGuard)
 @ApiExcludeController()
-@Controller('api/v1/rooms/:roomId/furnitures')
+@Controller('rooms/:roomId/furnitures')
 export class FurnituresController {
   constructor(private readonly furnituresService: FurnituresService) {}
 
