@@ -37,6 +37,9 @@ async function bootstrap() {
     `,
   });
 
+  // Global API prefix
+  app.setGlobalPrefix('api/v1');
+
   // Prefer the explicit internal port configured in docker-compose (ROOMS_INTERNAL_API_PORT)
   const port = process.env.PORT ?? process.env.ROOMS_INTERNAL_API_PORT ?? 3000;
   const host = '0.0.0.0';
