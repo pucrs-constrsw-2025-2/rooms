@@ -12,6 +12,8 @@ servers:
 tags:
   - name: Rooms
     description: Gerenciamento de salas
+  - name: Furnitures
+    description: Gerenciamento de mobílias (scaffold/not implemented)
 
 paths:
   /api/v1/rooms:
@@ -95,7 +97,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
-  /api/v1/rooms/{id}:
+  /api/v1/rooms/{roomId}:
     get:
       tags:
         - Rooms
@@ -104,7 +106,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: id
+        - name: roomId
           in: path
           required: true
           schema:
@@ -129,7 +131,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: id
+        - name: roomId
           in: path
           required: true
           schema:
@@ -164,7 +166,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: id
+        - name: roomId
           in: path
           required: true
           schema:
@@ -199,7 +201,7 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - name: id
+        - name: roomId
           in: path
           required: true
           schema:
@@ -212,7 +214,173 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
-  /health:
+  /api/v1/rooms/{roomId}/furnitures:
+    post:
+      tags:
+        - Furnitures
+      summary: Criar mobília (scaffold - retorna 501)
+      operationId: createFurniture
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '501':
+          description: Not Implemented
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    get:
+      tags:
+        - Furnitures
+      summary: Listar mobílias (scaffold - retorna 501)
+      operationId: getFurnitures
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '501':
+          description: Not Implemented
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/rooms/{roomId}/furnitures/{furnitureId}:
+    get:
+      tags:
+        - Furnitures
+      summary: Buscar mobília (scaffold - retorna 501)
+      operationId: getFurniture
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: furnitureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '501':
+          description: Not Implemented
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags:
+        - Furnitures
+      summary: Substituir mobília (scaffold - retorna 501)
+      operationId: updateFurniture
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: furnitureId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '501':
+          description: Not Implemented
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags:
+        - Furnitures
+      summary: Atualizar mobília (scaffold - retorna 501)
+      operationId: patchFurniture
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: furnitureId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '501':
+          description: Not Implemented
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags:
+        - Furnitures
+      summary: Deletar mobília (scaffold - retorna 501)
+      operationId: deleteFurniture
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: furnitureId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '501':
+          description: Not Implemented
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/health:
     get:
       tags:
         - Health
@@ -221,6 +389,20 @@ paths:
       responses:
         '200':
           description: Serviço está funcionando
+
+  /api/v1/metrics:
+    get:
+      tags:
+        - Metrics
+      summary: Métricas Prometheus
+      operationId: getMetrics
+      responses:
+        '200':
+          description: Métricas em formato Prometheus
+          content:
+            text/plain:
+              schema:
+                type: string
 
 components:
   securitySchemes:
